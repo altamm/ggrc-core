@@ -34,6 +34,7 @@ class Relationship(Base, db.Model):
       db.ForeignKey('automappings.id', ondelete='CASCADE'),
       nullable=True,
   )
+  is_external = db.Column(db.Boolean, nullable=False, default=False)
 
   def get_related_for(self, object_type):
     """Return related object for sent type."""
