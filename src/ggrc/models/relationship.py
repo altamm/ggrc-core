@@ -5,10 +5,12 @@
 
 import collections
 import sqlalchemy as sa
-from sqlalchemy import or_, and_
+from sqlalchemy import event, or_, and_
 from sqlalchemy.ext.declarative import declared_attr
+from sqlalchemy.orm import validates
 
 from ggrc import db
+from ggrc.login import is_external_app_user
 from ggrc.models.mixins import Base
 from ggrc.models import reflection
 from ggrc.models.exceptions import ValidationError
@@ -103,7 +105,7 @@ class Relationship(Base, db.Model):
             'destination_type', 'destination_id'),
     )
 
-  _api_attrs = reflection.ApiAttributes('source', 'destination')
+  _api_attrs = reflection.ApiAttributes('source', 'destination', 'is_external')
 
   def _display_name(self):
     return "{}:{} <-> {}:{}".format(self.source_type, self.source_id,
@@ -134,6 +136,24 @@ class Relationship(Base, db.Model):
             u"source_type={!r}, destination_type={!r}"
             .format(self.type, self.source_type, self.destination_type)
         )
+
+  # pylint:disable=unused-argument
+  @validates("is_external")
+  def validate_is_external(self, key, value):
+    if is_external_app_user() and not value:
+      raise ValidationError(
+          'External application can create only external relationships.')
+    return value
+
+  # pylint:disable=unused-argument
+  @staticmethod
+  def validate_delete(mapper, connection, target):
+    if not target.is_external and is_external_app_user():
+      raise ValidationError(
+          'External application can delete only external relationships.')
+
+
+event.listen(Relationship, 'before_delete', Relationship.validate_delete)
 
 
 class Relatable(object):
