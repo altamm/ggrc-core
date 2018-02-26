@@ -105,15 +105,6 @@ def init_extra_services(app):
   app.add_url_rule(
       '/api', view_func=ServiceDescription.as_view('ServiceDescription'))
 
-  # Services for external apps integrations.
-  from ggrc.integrations import external_api
-  app.add_url_rule(
-      '/external/map', 'external map',
-      view_func=login_required(external_api.map_objects), methods=['POST'])
-  app.add_url_rule(
-      '/external/unmap', 'external unmap',
-      view_func=login_required(external_api.unmap_objects), methods=['POST'])
-
 
 def init_all_services(app):
   """Register all GGRC REST services with the Flask application ``app``."""

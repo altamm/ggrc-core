@@ -10,11 +10,13 @@ backends
 import json
 import re
 from functools import wraps
+from email.utils import parseaddr
 from werkzeug.exceptions import Forbidden
 
 import flask_login
 from flask import request
 from flask import redirect
+from ggrc import settings
 from ggrc.extensions import get_extension_module_for
 from ggrc.rbac import SystemWideRoles
 
@@ -108,3 +110,23 @@ def is_creator():
   current_user = get_current_user()
   return (hasattr(current_user, 'system_wide_role') and
           current_user.system_wide_role == SystemWideRoles.CREATOR)
+
+
+def is_external_app_user():
+  """Checks if the current user is an external application.
+
+  Account for external application is defined in settings. External application
+  requests require special processing and validations.
+  """
+  if not settings.EXTERNAL_APP_USER:
+    return False
+
+  _, email = parseaddr(settings.EXTERNAL_APP_USER)
+  if not email:
+    return False
+
+  user = get_current_user()
+  if not user:
+    return False
+
+  return email == user.email
