@@ -24,7 +24,7 @@ QUERY = "query"
 # url path for user
 DEFAULT_EMAIL_DOMAIN = "example.com"
 DEFAULT_USER_EMAIL = "user@" + DEFAULT_EMAIL_DOMAIN
-DEFAULT_USER_HREF = "/".join([API, PEOPLE, str(1)])
+DEFAULT_USER_HREF = "/".join([API, PEOPLE, str(2)])
 
 
 class Widget(object):

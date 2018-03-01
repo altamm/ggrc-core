@@ -88,7 +88,7 @@ class PeopleFactory(EntitiesFactory):
     """Create object's instance for default system superuser."""
     return PersonEntity().update_attrs(
         type=self.obj_type,
-        name=roles.DEFAULT_USER, id=1, href=const_url.DEFAULT_USER_HREF,
+        name=roles.DEFAULT_USER, id=2, href=const_url.DEFAULT_USER_HREF,
         email=const_url.DEFAULT_USER_EMAIL, system_wide_role=roles.SUPERUSER)
 
   @staticmethod
