@@ -87,7 +87,8 @@ def request_loader(request):
                                 "{{'email': str}}, contains {!r} instead."
                                 .format(user))
 
-  db_user = all_models.Person.query.filter_by(email=email).first()
+  from ggrc.utils.user_generator import find_user
+  db_user = find_user(email)
   if not db_user:
     raise exceptions.BadRequest("No user with such email: {}"
                                 .format(email))

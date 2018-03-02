@@ -118,15 +118,9 @@ def is_external_app_user():
   Account for external application is defined in settings. External application
   requests require special processing and validations.
   """
-  if not settings.EXTERNAL_APP_USER:
-    return False
-
-  _, email = parseaddr(settings.EXTERNAL_APP_USER)
-  if not email:
-    return False
-
   user = get_current_user()
-  if not user:
+  if not user or user.is_anonymous():
     return False
 
-  return email == user.email
+  from ggrc.utils.user_generator import is_external_app_user_email
+  return is_external_app_user_email(user.email)
