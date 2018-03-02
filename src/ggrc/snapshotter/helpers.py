@@ -206,6 +206,7 @@ def create_relationship_dict(source, destination, user_id, context_id):
       "destination_id": destination.id,
       "modified_by_id": user_id,
       "context_id": context_id,
+      "is_external": False,
   }
 
 
