@@ -10,13 +10,11 @@ backends
 import json
 import re
 from functools import wraps
-from email.utils import parseaddr
 from werkzeug.exceptions import Forbidden
 
 import flask_login
 from flask import request
 from flask import redirect
-from ggrc import settings
 from ggrc.extensions import get_extension_module_for
 from ggrc.rbac import SystemWideRoles
 
