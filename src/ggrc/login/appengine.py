@@ -24,7 +24,9 @@ from werkzeug import exceptions
 from ggrc.login import common
 from ggrc.models import all_models
 from ggrc import settings
+from ggrc.utils.user_generator import find_or_create_external_app_user
 from ggrc.utils.user_generator import find_or_create_user_by_email
+from ggrc.utils.user_generator import is_external_app_user_email
 
 
 def get_user():
@@ -60,6 +62,7 @@ def request_loader(request):
 
   whitelist = settings.ALLOWED_QUERYAPI_APP_IDS
   inbound_appid = request.headers.get("X-Appengine-Inbound-Appid")
+
   if not inbound_appid:
     # don't check X-GGRC-user if the request doesn't come from another app
     return None
@@ -87,8 +90,11 @@ def request_loader(request):
                                 "{{'email': str}}, contains {!r} instead."
                                 .format(user))
 
-  from ggrc.utils.user_generator import find_user
-  db_user = find_user(email)
+  # Extern
+  if is_external_app_user_email(email):
+    db_user = find_or_create_external_app_user()
+  else:
+    db_user = all_models.Person.query.filter_by(email=email).first()
   if not db_user:
     raise exceptions.BadRequest("No user with such email: {}"
                                 .format(email))

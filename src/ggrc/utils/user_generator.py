@@ -114,9 +114,7 @@ def find_or_create_external_app_user():
   name, email = parseaddr(settings.EXTERNAL_APP_USER)
   user = find_user_by_email(email)
   if not user:
-    user = create_user(email,
-                       name=name,
-                       modified_by_id=get_current_user_id())
+    user = create_user(email, name=name)
   return user
 
 
@@ -193,7 +191,7 @@ def is_external_app_user_email(email):
   Args:
     email: A string email address of the user.
   """
-  if not settings.EXTERNAL_APP_USER:
+  if not getattr(settings, 'EXTERNAL_APP_USER'):
     return False
 
   _, external_app_user_email = parseaddr(settings.EXTERNAL_APP_USER)
