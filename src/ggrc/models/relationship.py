@@ -108,7 +108,8 @@ class Relationship(Base, db.Model):
   _api_attrs = reflection.ApiAttributes(
       'source',
       'destination',
-      reflection.Attribute('is_external', create=True, update=False, read=True),
+      reflection.Attribute(
+          'is_external', create=True, update=False, read=True),
   )
 
   def _display_name(self):
@@ -144,6 +145,7 @@ class Relationship(Base, db.Model):
   # pylint:disable=unused-argument
   @validates("is_external")
   def validate_is_external(self, key, value):
+    """Validates is change of is_external column value allowed."""
     if is_external_app_user() and (not value or self.is_external is False):
       raise ValidationError(
           'External application can create only external relationships.')
@@ -152,6 +154,7 @@ class Relationship(Base, db.Model):
   # pylint:disable=unused-argument
   @staticmethod
   def validate_delete(mapper, connection, target):
+    """Validates is delete of Relationship is allowed."""
     if is_external_app_user() and not target.is_external:
       raise ValidationError(
           'External application can delete only external relationships.')

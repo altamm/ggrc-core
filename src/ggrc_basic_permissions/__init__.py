@@ -283,7 +283,6 @@ def load_external_app_permissions(permissions):
         permissions)
 
 
-
 def load_user_roles(user, permissions):
   """Load all user roles for user
 

@@ -24,6 +24,7 @@ def get_login_module():
 
 
 def user_loader(user_id):
+  # pylint: disable=cyclic-import
   from ggrc.utils.user_generator import find_user_by_id
   return find_user_by_id(user_id)
 
@@ -120,5 +121,6 @@ def is_external_app_user():
   if not user or user.is_anonymous():
     return False
 
+  # pylint: disable=cyclic-import
   from ggrc.utils.user_generator import is_external_app_user_email
   return is_external_app_user_email(user.email)

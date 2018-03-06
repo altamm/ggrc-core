@@ -99,7 +99,7 @@ def search_user(email):
 def find_or_create_external_user(email, name):
   """Find or generate user after verification"""
   if is_external_app_user_email(email):
-    return find_or_create_external_app_user()
+    return find_or_create_ext_app_user()
 
   if settings.INTEGRATION_SERVICE_URL == 'mock':
     return find_or_create_user_by_email(email, name)
@@ -109,7 +109,7 @@ def find_or_create_external_user(email, name):
   return None
 
 
-def find_or_create_external_app_user():
+def find_or_create_ext_app_user():
   """Find or generate external application user after verification."""
   name, email = parseaddr(settings.EXTERNAL_APP_USER)
   user = find_user_by_email(email)
@@ -125,7 +125,7 @@ def find_user(email):
   with Creator role.
   """
   if is_external_app_user_email(email):
-    return find_or_create_external_app_user()
+    return find_or_create_ext_app_user()
 
   if settings.INTEGRATION_SERVICE_URL == 'mock':
     return find_user_by_email(email)

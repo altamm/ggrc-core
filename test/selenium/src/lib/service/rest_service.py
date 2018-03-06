@@ -245,8 +245,8 @@ class RelationshipsService(HelpRestService):
     """
     return [self.client.create_object(
         type=objects.get_singular(self.endpoint), source=src_obj.__dict__,
-        destination=dest_obj.__dict__, **attrs_for_template) for
-        dest_obj in help_utils.convert_to_list(dest_objs)]
+        destination=dest_obj.__dict__, is_external=False, **attrs_for_template)
+        for dest_obj in help_utils.convert_to_list(dest_objs)]
 
 
 class ObjectsOwnersService(HelpRestService):
